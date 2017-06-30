@@ -45,7 +45,7 @@ module Jekyll
     # Config defaults
     A_Z_FILE_NAME = '/a-z.html'.freeze
     RELATIVE_PATH = ''.freeze
-    INDEX_TITLE = true
+    INDEX_TITLES = true
     EXCLUDE = ['/atom.xml', '/feed.xml', '/feed/index.xml', '/a-z.html', '/a-z.md'].freeze
     INCLUDE_POSTS = ['/index.html'].freeze
     OUTPUT_TYPE = :html
@@ -75,7 +75,7 @@ module Jekyll
       @config['relative_path'] = a_z_config['relative_path'] || RELATIVE_PATH
       @config['destination_path'] = valid_destination(site, a_z_config['alternate_dest'])
       @config['output_type'] = determine_output_type
-      @config['index_title'] = valid_boolean(a_z_config['index_title'])
+      @config['index_titles'] = valid_boolean(a_z_config['index_titles'])
       @config['exclude'] = a_z_config['exclude'] || EXCLUDE
       # @config['include_posts'] = a_z_config['include_posts'] || INCLUDE_POSTS
       @config['front_matter_ext'] = a_z_config['front_matter_ext'] || FRONT_MATTER_EXT
@@ -112,7 +112,7 @@ module Jekyll
     # Add all a-z terms and title to the index.
     def add_terms(idx, page_or_post)
       url = page_url(page_or_post)
-      add_term(idx, page_or_post.data['title'], url) if index_title?
+      add_term(idx, page_or_post.data['title'], url) if index_titles?
       page_or_post.data['a-z'].each { |term| add_term(idx, term, url) } if page_or_post.data.key? 'a-z'
     end
 
@@ -238,8 +238,8 @@ module Jekyll
       @config['include_posts'].include? name
     end
 
-    def index_title?
-      @config['index_title']
+    def index_titles?
+      @config['index_titles']
     end
 
     def valid_filename(configured_value)
@@ -261,10 +261,10 @@ module Jekyll
     end
 
     def valid_boolean(configured_value)
-      return INDEX_TITLE unless configured_value
+      return INDEX_TITLES unless configured_value
       return configured_value if configured_value.is_a? TrueClass
       return configured_value if configured_value.is_a? FalseClass
-      INDEX_TITLE
+      INDEX_TITLES
     end
 
     def valid_destination(site, configured_value)
